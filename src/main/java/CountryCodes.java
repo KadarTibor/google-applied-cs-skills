@@ -30,7 +30,12 @@ public class CountryCodes {
             if(threeLetterCode.length()>3){
                 System.out.println("I assume that you entered a country name and will search for it's code");
                 if(countryCodes.values().contains(threeLetterCode)) {
-                    countryCodes.entrySet().stream().anyMatch(es -> es.equals(es.getValue(), threeLetterCode))
+                    String finalThreeLetterCode = threeLetterCode;
+                    countryCodes.forEach((key, value) -> {
+                        if(value.equals(finalThreeLetterCode)){
+                            System.out.println("Country code of " + value + " is: " + key);
+                        }
+                    });
                 } else {
                     System.out.println("We never heard about that country");
                 }
