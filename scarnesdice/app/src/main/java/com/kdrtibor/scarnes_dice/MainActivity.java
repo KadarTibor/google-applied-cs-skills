@@ -1,6 +1,7 @@
 package com.kdrtibor.scarnes_dice;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -15,6 +16,7 @@ public class MainActivity extends AppCompatActivity {
     private int computerOverallScore = 0;
     private int computerTurnScore = 0;
     private Random random;
+    private boolean stopTurn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,17 +69,27 @@ public class MainActivity extends AppCompatActivity {
 
     private void passTurnToComputer() {
         enableRollAndHold(false);
-        while (computerTurnScore < 20) {
-            int rollValue = handleRollAction();
-            if (rollValue != 1) {
-                computerTurnScore += rollValue;
-            } else {
-                computerTurnScore = 0;
-                break;
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                if (computerTurnScore < 20) {
+                    int rollValue = handleRollAction();
+                    if (rollValue != 1) {
+                        computerTurnScore += rollValue;
+                        handler.postDelayed(this, 500);
+                    } else {
+                        computerTurnScore = 0;
+                        handleHoldAction();
+                        enableRollAndHold(true);
+                    }
+                } else {
+                    handleHoldAction();
+                    enableRollAndHold(true);
+                }
             }
-        }
-        handleHoldAction();
-        enableRollAndHold(true);
+        }, 500);
     }
 
     private void enableRollAndHold(boolean doEnable) {
