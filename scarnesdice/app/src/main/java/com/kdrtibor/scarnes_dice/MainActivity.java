@@ -1,8 +1,7 @@
 package com.kdrtibor.scarnes_dice;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -27,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
         Button rollButton = findViewById(R.id.rollButton);
         rollButton.setOnClickListener(v -> {
             int rollValue = handleRollAction();
-            if(rollValue != 1){
+            if (rollValue != 1) {
                 userTurnScore += rollValue;
             } else {
                 userTurnScore = 0;
@@ -49,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void handleResetAction(){
+    private void handleResetAction() {
         userTurnScore = 0;
         userOverallScore = 0;
         computerOverallScore = 0;
@@ -58,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         updateActionLabel("The game has been reset");
     }
 
-    private void handleHoldAction(){
+    private void handleHoldAction() {
         userOverallScore += userTurnScore;
         userTurnScore = 0;
         computerOverallScore += computerTurnScore;
@@ -66,11 +65,11 @@ public class MainActivity extends AppCompatActivity {
         updateLabels(userOverallScore + "", computerOverallScore + "");
     }
 
-    private void passTurnToComputer(){
+    private void passTurnToComputer() {
         enableRollAndHold(false);
-        while(computerTurnScore < 20){
+        while (computerTurnScore < 20) {
             int rollValue = handleRollAction();
-            if(rollValue != 1) {
+            if (rollValue != 1) {
                 computerTurnScore += rollValue;
             } else {
                 computerTurnScore = 0;
@@ -81,28 +80,29 @@ public class MainActivity extends AppCompatActivity {
         enableRollAndHold(true);
     }
 
-    private void enableRollAndHold(boolean doEnable){
+    private void enableRollAndHold(boolean doEnable) {
         Button rollButton = findViewById(R.id.rollButton);
         rollButton.setEnabled(doEnable);
         Button holdButton = findViewById(R.id.holdButton);
         holdButton.setEnabled(doEnable);
     }
-    private void updateLabels(String yourScore, String computerScore){
+
+    private void updateLabels(String yourScore, String computerScore) {
         TextView yourScoreTextView = findViewById(R.id.yourScoreVal);
         yourScoreTextView.setText(yourScore);
         TextView computerScoreTextView = findViewById(R.id.computerScoreVal);
         computerScoreTextView.setText(computerScore);
     }
 
-    private void updateActionLabel(String description){
+    private void updateActionLabel(String description) {
         TextView actionLabel = findViewById(R.id.action_label);
         actionLabel.setText(description);
     }
 
-    private int handleRollAction(){
+    private int handleRollAction() {
         int rollValue = Math.abs(random.nextInt()) % 6 + 1;
         ImageView image = findViewById(R.id.image);
-        switch (rollValue){
+        switch (rollValue) {
             case 1: {
                 image.setImageResource(R.drawable.dice1);
                 break;
@@ -127,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
                 image.setImageResource(R.drawable.dice6);
                 break;
             }
-            default:{
+            default: {
                 break;
             }
         }
