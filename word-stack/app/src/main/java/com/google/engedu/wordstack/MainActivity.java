@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     private Random random = new Random();
     private StackedLayout stackedLayout;
     private String word1, word2;
+    private Stack<LetterTile> palcedTiles = new Stack<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,10 +73,10 @@ public class MainActivity extends AppCompatActivity {
 
         View word1LinearLayout = findViewById(R.id.word1);
         word1LinearLayout.setOnTouchListener(new TouchListener());
-        //word1LinearLayout.setOnDragListener(new DragListener());
+        word1LinearLayout.setOnDragListener(new DragListener());
         View word2LinearLayout = findViewById(R.id.word2);
         word2LinearLayout.setOnTouchListener(new TouchListener());
-        //word2LinearLayout.setOnDragListener(new DragListener());
+        word2LinearLayout.setOnDragListener(new DragListener());
     }
 
     private class TouchListener implements View.OnTouchListener {
@@ -89,11 +90,7 @@ public class MainActivity extends AppCompatActivity {
                     TextView messageBox = (TextView) findViewById(R.id.message_box);
                     messageBox.setText(word1 + " " + word2);
                 }
-                /**
-                 **
-                 **  YOUR CODE GOES HERE
-                 **
-                 **/
+                palcedTiles.push(tile);
                 return true;
             }
             return false;
@@ -129,11 +126,7 @@ public class MainActivity extends AppCompatActivity {
                         TextView messageBox = (TextView) findViewById(R.id.message_box);
                         messageBox.setText(word1 + " " + word2);
                     }
-                    /**
-                     **
-                     **  YOUR CODE GOES HERE
-                     **
-                     **/
+                    palcedTiles.push(tile);
                     return true;
             }
             return false;
@@ -144,15 +137,21 @@ public class MainActivity extends AppCompatActivity {
         View word1LinearLayout = findViewById(R.id.word1);
         View word2LinearLayout = findViewById(R.id.word2);
 
-        ((LinearLayout) word1LinearLayout).removeAllViews();
-        ((LinearLayout) word2LinearLayout).removeAllViews();
+        if (word1LinearLayout != null) {
+            ((LinearLayout) word1LinearLayout).removeAllViews();
+        }
+        if (word2LinearLayout != null) {
+            ((LinearLayout) word2LinearLayout).removeAllViews();
+        }
         stackedLayout.removeAllViews();
 
         TextView messageBox = (TextView) findViewById(R.id.message_box);
         word1 = words.get(Math.abs(random.nextInt()) % words.size());
         word2 = words.get(Math.abs(random.nextInt()) % words.size());
         String scrambledWords = scrambleWords(word1, word2);
-        messageBox.setText(scrambledWords);
+        if (messageBox != null) {
+            messageBox.setText(scrambledWords);
+        }
 
         for(int i = scrambledWords.length() - 1; i >= 0; i--){
             stackedLayout.push(new LetterTile(this, scrambledWords.toCharArray()[i]));
@@ -187,11 +186,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public boolean onUndo(View view) {
-        /**
-         **
-         **  YOUR CODE GOES HERE
-         **
-         **/
-        return true;
+        if(!palcedTiles.empty()){
+            LetterTile lastTile = palcedTiles.pop();
+            lastTile.moveToViewGroup(stackedLayout);
+            return true;
+        } else {
+            return false;
+        }
     }
 }

@@ -15,6 +15,7 @@
 
 package com.google.engedu.wordstack;
 
+import android.content.ClipData;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.AppCompatTextView;
@@ -66,11 +67,13 @@ public class LetterTile extends AppCompatTextView {
 
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent) {
-        /**
-         **
-         **  YOUR CODE GOES HERE
-         **
-         **/
-        return super.onTouchEvent(motionEvent);
+        if(!frozen && motionEvent.getAction() == MotionEvent.ACTION_DOWN){
+            startDrag(ClipData.newPlainText("", ""),
+                    new View.DragShadowBuilder(this),
+                    this, 0);
+            return true;
+        } else {
+            return super.onTouchEvent(motionEvent);
+        }
     }
 }
