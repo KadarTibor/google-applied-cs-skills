@@ -17,10 +17,6 @@ package com.google.engedu.bstguesser;
 
 import android.graphics.Canvas;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.jar.Pack200;
-
 public class BinarySearchTree {
     private TreeNode root = null;
 
@@ -30,9 +26,54 @@ public class BinarySearchTree {
     public void insert(int value) {
         if (root == null) {
             root = new TreeNode(value);
-            return;
         } else {
-            root.insert(value);
+//            insertNodeInTreeRecursive(root, value);
+            insertNodeInTreeIterative(value);
+        }
+    }
+
+    private void insertNodeInTreeRecursive(TreeNode root, int value) {
+        if (root.getValue() > value && root.left != null) {
+            // go on the left branch of the tree
+            insertNodeInTreeRecursive(root.left, value);
+            return;
+        } else if (root.getValue() < value && root.right != null) {
+            // go on the right branch of the tree
+            insertNodeInTreeRecursive(root.right, value);
+            return;
+        }
+        if (root.getValue() > value) {
+            // insert left
+            root.left = new TreeNode(value);
+            System.out.println("inserterd node with value " + value);
+        } else {
+            // insert right
+            root.right = new TreeNode(value);
+            System.out.println("inserterd node with value " + value);
+        }
+    }
+
+    private void insertNodeInTreeIterative(int value){
+        TreeNode parser = root;
+        while(parser.left != null || parser.right != null){
+            if (parser.getValue() > value && parser.left != null) {
+                // go on the left branch of the tree
+                parser = parser.left;
+            } else if (parser.getValue() < value && parser.right != null) {
+                // go on the right branch of the tree
+                parser = parser.right;
+            } else
+                break;
+        }
+
+        if (parser.getValue() > value) {
+            // insert left
+            parser.left = new TreeNode(value);
+            System.out.println("inserterd node with value " + value);
+        } else {
+            // insert right
+            parser.right = new TreeNode(value);
+            System.out.println("inserterd node with value " + value);
         }
     }
 
