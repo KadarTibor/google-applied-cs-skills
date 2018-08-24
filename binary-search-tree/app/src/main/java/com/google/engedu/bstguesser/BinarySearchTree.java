@@ -36,11 +36,17 @@ public class BinarySearchTree {
             // go on the left branch of the tree
             insertNodeInTreeRecursive(root.left, value);
             root.setHeight(Math.max(root.left.getHeight(), root.right != null ? root.right.getHeight() : 0) + 1);
+            // check if the subtree rooted at the current tree is balanced
+            int balance = root.left.getHeight() - (root.right != null ? root.right.getHeight() : 0);
+            balance(root, value, balance);
             return;
         } else if (root.getValue() < value && root.right != null) {
             // go on the right branch of the tree
             insertNodeInTreeRecursive(root.right, value);
             root.setHeight(Math.max(root.left != null ? root.left.getHeight() : 0, root.right.getHeight()) + 1);
+            // check if the subtree rooted at the current tree is balanced
+            int balance = (root.left != null ? root.left.getHeight() : 0) - root.right.getHeight();
+            balance(root, value, balance);
             return;
         }
         if (root.getValue() > value) {
@@ -53,9 +59,50 @@ public class BinarySearchTree {
         root.setHeight(Math.max(root.left != null ? root.left.getHeight() : 0, root.right != null ? root.right.getHeight() : 0) + 1);
     }
 
-    private void insertNodeInTreeIterative(int value){
+    private void balance(TreeNode root, int value, int balance) {
+        if (root.left != null && root.right != null) {
+
+            if (balance > 1 && value < root.left.getValue()) {
+                root = rightRotate(root);
+            } else if (balance < -1 && value > root.right.getValue()) {
+                root = leftRotate(root);
+            } else if (balance > 1 && value > root.left.getValue()) {
+                root.left = leftRotate(root.left);
+                rightRotate(root);
+            } else if (balance < -1 && value < root.right.getValue()) {
+                root.right = rightRotate(root.right);
+                leftRotate(root);
+            }
+        }
+    }
+
+    private TreeNode rightRotate(TreeNode a) {
+        TreeNode b = a.left;
+
+        a.left = b.right;
+        b.right = a;
+
+        //update the heights
+        a.setHeight(Math.max(a.right != null ? a.right.getHeight() : 0, a.left != null ? a.left.getHeight() : 0) + 1);
+        b.setHeight(Math.max(b.right != null ? b.right.getHeight() : 0, b.left != null ? b.left.getHeight() : 0) + 1);
+        return b;
+    }
+
+    private TreeNode leftRotate(TreeNode a) {
+        TreeNode b = a.right;
+
+        a.right = b.left;
+        b.left = a;
+
+        //update the heights
+        a.setHeight(Math.max(a.right != null ? a.right.getHeight() : 0, a.left != null ? a.left.getHeight() : 0) + 1);
+        b.setHeight(Math.max(b.right != null ? b.right.getHeight() : 0, b.left != null ? b.left.getHeight() : 0) + 1);
+        return b;
+    }
+
+    private void insertNodeInTreeIterative(int value) {
         TreeNode parser = root;
-        while(parser.left != null || parser.right != null){
+        while (parser.left != null || parser.right != null) {
             if (parser.getValue() > value && parser.left != null) {
                 // go on the left branch of the tree
                 parser = parser.left;
@@ -88,14 +135,14 @@ public class BinarySearchTree {
         return root.click(x, y, target);
     }
 
-    private TreeNode search(int value) throws Exception{
+    private TreeNode search(int value) throws Exception {
         TreeNode current = root;
-        while(current != null){
-            if(current.getValue() > value && current.left != null){
+        while (current != null) {
+            if (current.getValue() > value && current.left != null) {
                 current = current.left;
-            } else if(current.getValue() < value){
+            } else if (current.getValue() < value) {
                 current = current.right;
-            } else if(current.getValue() == value){
+            } else if (current.getValue() == value) {
                 //we found the node
                 break;
             } else {
@@ -106,7 +153,7 @@ public class BinarySearchTree {
     }
 
     public void invalidateNode(int targetValue) {
-        try{
+        try {
             TreeNode target = search(targetValue);
             target.invalidate();
         } catch (Exception ex) {
