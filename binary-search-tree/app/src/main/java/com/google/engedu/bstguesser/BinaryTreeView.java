@@ -86,6 +86,7 @@ public class BinaryTreeView extends View {
                             tree.invalidateNode(targetValue);
                         }
                         searchPosition++;
+                        searchSequence.remove(Integer.valueOf(targetValue));
                         updateMessage();
                         return true;
                     }

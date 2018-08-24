@@ -27,8 +27,7 @@ public class BinarySearchTree {
         if (root == null) {
             root = new TreeNode(value);
         } else {
-//            insertNodeInTreeRecursive(root, value);
-            insertNodeInTreeIterative(value);
+            insertNodeInTreeRecursive(root, value);
         }
     }
 
@@ -36,21 +35,22 @@ public class BinarySearchTree {
         if (root.getValue() > value && root.left != null) {
             // go on the left branch of the tree
             insertNodeInTreeRecursive(root.left, value);
+            root.setHeight(Math.max(root.left.getHeight(), root.right != null ? root.right.getHeight() : 0) + 1);
             return;
         } else if (root.getValue() < value && root.right != null) {
             // go on the right branch of the tree
             insertNodeInTreeRecursive(root.right, value);
+            root.setHeight(Math.max(root.left != null ? root.left.getHeight() : 0, root.right.getHeight()) + 1);
             return;
         }
         if (root.getValue() > value) {
             // insert left
             root.left = new TreeNode(value);
-            System.out.println("inserterd node with value " + value);
         } else {
             // insert right
             root.right = new TreeNode(value);
-            System.out.println("inserterd node with value " + value);
         }
+        root.setHeight(Math.max(root.left != null ? root.left.getHeight() : 0, root.right != null ? root.right.getHeight() : 0) + 1);
     }
 
     private void insertNodeInTreeIterative(int value){
@@ -69,11 +69,9 @@ public class BinarySearchTree {
         if (parser.getValue() > value) {
             // insert left
             parser.left = new TreeNode(value);
-            System.out.println("inserterd node with value " + value);
         } else {
             // insert right
             parser.right = new TreeNode(value);
-            System.out.println("inserterd node with value " + value);
         }
     }
 
@@ -90,18 +88,29 @@ public class BinarySearchTree {
         return root.click(x, y, target);
     }
 
-    private TreeNode search(int value) {
+    private TreeNode search(int value) throws Exception{
         TreeNode current = root;
-        /**
-         **
-         **  YOUR CODE GOES HERE
-         **
-         **/
+        while(current != null){
+            if(current.getValue() > value && current.left != null){
+                current = current.left;
+            } else if(current.getValue() < value){
+                current = current.right;
+            } else if(current.getValue() == value){
+                //we found the node
+                break;
+            } else {
+                throw new Exception("The value " + value + " is not present in the tree");
+            }
+        }
         return current;
     }
 
     public void invalidateNode(int targetValue) {
-        TreeNode target = search(targetValue);
-        target.invalidate();
+        try{
+            TreeNode target = search(targetValue);
+            target.invalidate();
+        } catch (Exception ex) {
+            // todo show some error message
+        }
     }
 }
