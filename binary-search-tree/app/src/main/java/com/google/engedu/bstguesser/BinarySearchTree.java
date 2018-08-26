@@ -27,56 +27,60 @@ public class BinarySearchTree {
         if (root == null) {
             root = new TreeNode(value);
         } else {
-            insertNodeInTreeRecursive(root, value);
+            root = insertNodeInTreeRecursive(root, value);
         }
     }
 
-    private void insertNodeInTreeRecursive(TreeNode root, int value) {
+    private TreeNode insertNodeInTreeRecursive(TreeNode root, int value) {
         if (root.getValue() > value && root.left != null) {
             // go on the left branch of the tree
-            insertNodeInTreeRecursive(root.left, value);
+            root.left = insertNodeInTreeRecursive(root.left, value);
             root.setHeight(Math.max(root.left.getHeight(), root.right != null ? root.right.getHeight() : 0) + 1);
             // check if the subtree rooted at the current tree is balanced
             int balance = root.left.getHeight() - (root.right != null ? root.right.getHeight() : 0);
-            balance(root, value, balance);
-            return;
+            return balance(root, value, balance);
         } else if (root.getValue() < value && root.right != null) {
             // go on the right branch of the tree
-            insertNodeInTreeRecursive(root.right, value);
+            root.right = insertNodeInTreeRecursive(root.right, value);
             root.setHeight(Math.max(root.left != null ? root.left.getHeight() : 0, root.right.getHeight()) + 1);
             // check if the subtree rooted at the current tree is balanced
             int balance = (root.left != null ? root.left.getHeight() : 0) - root.right.getHeight();
-            balance(root, value, balance);
-            return;
+            return balance(root, value, balance);
         }
         if (root.getValue() > value) {
             // insert left
             root.left = new TreeNode(value);
+            //print tree
+            printTree(this.root, 0);
         } else {
             // insert right
             root.right = new TreeNode(value);
+            printTree(this.root, 0);
+
         }
+        System.out.println("-----------------------Inserted new node with value " + value);
         root.setHeight(Math.max(root.left != null ? root.left.getHeight() : 0, root.right != null ? root.right.getHeight() : 0) + 1);
+        return root;
     }
 
-    private void balance(TreeNode root, int value, int balance) {
-        if (root.left != null && root.right != null) {
-
-            if (balance > 1 && value < root.left.getValue()) {
-                root = rightRotate(root);
-            } else if (balance < -1 && value > root.right.getValue()) {
-                root = leftRotate(root);
-            } else if (balance > 1 && value > root.left.getValue()) {
-                root.left = leftRotate(root.left);
-                rightRotate(root);
-            } else if (balance < -1 && value < root.right.getValue()) {
-                root.right = rightRotate(root.right);
-                leftRotate(root);
-            }
+    private TreeNode balance(TreeNode root, int value, int balance) {
+        //left branch is bigger, val
+        if (balance > 1 && value < root.left.getValue()) {
+            root = rightRotate(root);
+        } else if (balance < -1 && value > root.right.getValue()) {
+            root = leftRotate(root);
+        } else if (balance > 1 && value > root.left.getValue()) {
+            root.left = leftRotate(root.left);
+            root = rightRotate(root);
+        } else if (balance < -1 && value < root.right.getValue()) {
+            root.right = rightRotate(root.right);
+            root = leftRotate(root);
         }
+        return root;
     }
 
     private TreeNode rightRotate(TreeNode a) {
+        System.out.println("right rotate on " + a.getValue());
         TreeNode b = a.left;
 
         a.left = b.right;
@@ -89,6 +93,7 @@ public class BinarySearchTree {
     }
 
     private TreeNode leftRotate(TreeNode a) {
+        System.out.println("Left rotate on " + a.getValue());
         TreeNode b = a.right;
 
         a.right = b.left;
@@ -158,6 +163,21 @@ public class BinarySearchTree {
             target.invalidate();
         } catch (Exception ex) {
             // todo show some error message
+        }
+    }
+
+
+    private void printTree(TreeNode node, int level) {
+
+        if (node != null) {
+            if (node.left != null)
+                printTree(node.left, level + 1);
+            for (int i = 0; i <= level; i++) {
+                System.out.print(" ");
+            }
+            System.out.println(node.getValue());
+            if (node.right != null)
+                printTree(node.right, level + 1);
         }
     }
 }

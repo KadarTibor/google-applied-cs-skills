@@ -53,7 +53,7 @@ public class TreeNode {
         this.y = y;
         x = (x0 + x1) / 2;
 
-        if(left != null) {
+        if (left != null) {
             left.positionSelf(x0, right == null ? x1 - 2 * MARGIN : x, y + SIZE + MARGIN);
         }
         if (right != null) {
@@ -67,20 +67,21 @@ public class TreeNode {
         linePaint.setStrokeWidth(3);
         linePaint.setColor(Color.GRAY);
         if (left != null)
-            c.drawLine(x, y + SIZE/2, left.x, left.y + SIZE/2, linePaint);
+            c.drawLine(x, y + SIZE / 2, left.x, left.y + SIZE / 2, linePaint);
         if (right != null)
-            c.drawLine(x, y + SIZE/2, right.x, right.y + SIZE/2, linePaint);
+            c.drawLine(x, y + SIZE / 2, right.x, right.y + SIZE / 2, linePaint);
 
         Paint fillPaint = new Paint();
         fillPaint.setStyle(Paint.Style.FILL);
         fillPaint.setColor(color);
-        c.drawRect(x-SIZE/2, y, x+SIZE/2, y+SIZE, fillPaint);
+        c.drawRect(x - SIZE / 2, y, x + SIZE / 2, y + SIZE, fillPaint);
 
         Paint paint = new Paint();
         paint.setColor(Color.BLACK);
-        paint.setTextSize(SIZE * 2/3);
+        paint.setTextSize(SIZE * 2 / 3);
         paint.setTextAlign(Paint.Align.CENTER);
-        c.drawText(showValue ? String.valueOf(value) : "?", x, y + SIZE * 3/4, paint);
+//        c.drawText(showValue ? String.valueOf(value) : "?", x, y + SIZE * 3/4, paint);
+        c.drawText(String.valueOf(value), x, y + SIZE * 3 / 4, paint);
 
         if (height > 0) {
             Paint heightPaint = new Paint();
@@ -128,4 +129,6 @@ public class TreeNode {
     public void setHeight(int height) {
         this.height = height;
     }
+
+    public void setValue(int value) {this.value = value;}
 }
